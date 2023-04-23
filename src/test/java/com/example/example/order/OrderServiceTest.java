@@ -1,16 +1,25 @@
 package com.example.example.order;
 
+import com.example.example.AppConfig;
 import com.example.example.member.Grade;
 import com.example.example.member.Member;
 import com.example.example.member.MemberService;
-import com.example.example.member.MemberServiceImpl;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class OrderServiceTest {
 
-    MemberService memberService = new MemberServiceImpl();
-    OrderService orderService = new OrderServiceImpl();
+    MemberService memberService;
+    OrderService orderService;
+
+    @BeforeEach
+    void before() {
+        AppConfig appConfig = new AppConfig();
+        memberService = appConfig.memberService();
+        orderService = appConfig.orderService();
+    }
 
     @Test
     void createOrder() {
@@ -19,6 +28,6 @@ public class OrderServiceTest {
         memberService.join(member);
 
         Order order = orderService.createOrder(memberId, "itemA", 10000);
-        Assertions.assertEquals(order.getDiscountPrice(), 1000);
+        assertEquals(order.getDiscountPrice(), 1000);
     }
 }
