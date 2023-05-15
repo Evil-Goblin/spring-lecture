@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -81,16 +82,38 @@ public class BasicItemController {
 //        return "basic/item";
 //    }
 
+//    @PostMapping("/add")
+//    public String addItemV3(Item item) {
+//        // ModelAttribute 의 값을 지정하지 않을 시 데이터에 해당하는 클래스명의 첫글자를 소문자로한 값이 사용된다.
+//        // 위의 경우 Item -> item
+//        // ModelAttribute 생략가능
+//        itemRepository.save(item);
+//
+////        model.addAttribute("item", item); // ModelAttribute 를 이용하면 자동으로 추가된다. 파라메터의 model도 제거 가능
+//
+//        return "basic/item";
+//    }
+
+//    @PostMapping("/add")
+//    public String addItemV4(Item item) {
+//        // ModelAttribute 의 값을 지정하지 않을 시 데이터에 해당하는 클래스명의 첫글자를 소문자로한 값이 사용된다.
+//        // 위의 경우 Item -> item
+//        // ModelAttribute 생략가능
+//        itemRepository.save(item);
+//
+////        model.addAttribute("item", item); // ModelAttribute 를 이용하면 자동으로 추가된다. 파라메터의 model도 제거 가능
+//
+//        return "redirect:/basic/items/" + item.getId();
+//    }
+
     @PostMapping("/add")
-    public String addItemV3(Item item) {
-        // ModelAttribute 의 값을 지정하지 않을 시 데이터에 해당하는 클래스명의 첫글자를 소문자로한 값이 사용된다.
-        // 위의 경우 Item -> item
-        // ModelAttribute 생략가능
-        itemRepository.save(item);
+    public String addItemV5(Item item, RedirectAttributes redirectAttributes) {
+        Item saved = itemRepository.save(item);
+        redirectAttributes.addAttribute("itemId", saved.getId());
+        redirectAttributes.addAttribute("status", true);
+        // 초과된 attribute는 쿼리 파라메터로 전달된다.
 
-//        model.addAttribute("item", item); // ModelAttribute 를 이용하면 자동으로 추가된다. 파라메터의 model도 제거 가능
-
-        return "basic/item";
+        return "redirect:/basic/items/{itemId}";
     }
 
 //    @PostMapping("/add")
@@ -103,11 +126,17 @@ public class BasicItemController {
 //    }
 
     @GetMapping("/{itemId}/edit")
-    public String edit(@PathVariable long itemId, Model model) {
+    public String editFrom(@PathVariable long itemId, Model model) {
         Item item = itemRepository.findById(itemId);
         model.addAttribute("item", item);
 
         return "basic/editForm";
     }
 
+    @PostMapping("/{itemId}/edit")
+    public String updateItem(@PathVariable long itemId, Item item) {
+        itemRepository.update(itemId, item);
+
+        return "redirect:/basic/items/{itemId}";
+    }
 }
