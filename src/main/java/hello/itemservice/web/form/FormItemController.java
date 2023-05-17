@@ -32,7 +32,12 @@ public class FormItemController {
     }
 
     @GetMapping("/add")
-    public String addForm() {
+    public String addForm(Model model) {
+        Item item = new Item();
+        item.setItemName("testName");
+        item.setPrice(10000);
+        item.setQuantity(10);
+        model.addAttribute("item", item);
         return "form/addForm";
     }
 
