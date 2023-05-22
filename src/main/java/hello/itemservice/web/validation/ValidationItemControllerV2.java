@@ -156,6 +156,11 @@ public class ValidationItemControllerV2 {
         log.info("objectName={}", bindingResult.getObjectName());
         log.info("target={}", bindingResult.getTarget());
 
+        if (bindingResult.hasErrors()) {
+            log.error("errors = {}", bindingResult);
+            return "validation/v2/addForm";
+        }
+
         // 아래의 검증문을 편리하게 제공하는 유틸
         ValidationUtils.rejectIfEmptyOrWhitespace(bindingResult, "itemName", "required");
 //        if (!StringUtils.hasText(item.getItemName())) {
