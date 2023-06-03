@@ -23,6 +23,6 @@ public class ServletExController {
 
     @GetMapping("/error-500")
     public void error500(HttpServletResponse response) throws IOException {
-        response.sendError(500, "404오류");
+        response.sendError(500, "500오류");
     }
 }
