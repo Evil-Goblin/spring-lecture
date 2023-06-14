@@ -1,6 +1,7 @@
 package hello.introduction.repository;
 
 import hello.introduction.domain.Member;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Component
 public class MemoryMemberRepository implements MemberRepository{
 
     private final Map<Long, Member> store = new ConcurrentHashMap<>();
