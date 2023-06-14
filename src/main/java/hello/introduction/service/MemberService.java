@@ -3,10 +3,12 @@ package hello.introduction.service;
 import hello.introduction.domain.Member;
 import hello.introduction.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 @RequiredArgsConstructor
 public class MemberService {
 
