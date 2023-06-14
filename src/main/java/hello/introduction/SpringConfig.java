@@ -1,10 +1,8 @@
 package hello.introduction;
 
-import hello.introduction.repository.JdbcMemberRepository;
-import hello.introduction.repository.JdbcTemplateMemberRepository;
-import hello.introduction.repository.MemberRepository;
-import hello.introduction.repository.MemoryMemberRepository;
+import hello.introduction.repository.*;
 import hello.introduction.service.MemberService;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,12 +14,14 @@ import javax.sql.DataSource;
 @RequiredArgsConstructor
 public class SpringConfig {
 
+//    @Autowired
+//    private DataSource dataSource;
     @Autowired
-    private DataSource dataSource;
+    private EntityManager em;
 
     @Bean
     public MemberRepository memberRepository() {
-        return new JdbcTemplateMemberRepository(dataSource);
+        return new JpaMemberRepository(em);
     }
 
 //    @Bean
