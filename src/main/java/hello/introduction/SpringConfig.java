@@ -14,18 +14,24 @@ import javax.sql.DataSource;
 @RequiredArgsConstructor
 public class SpringConfig {
 
+    // jdbc template
 //    @Autowired
 //    private DataSource dataSource;
-    @Autowired
-    private EntityManager em;
 
-    @Bean
-    public MemberRepository memberRepository() {
-        return new JpaMemberRepository(em);
-    }
+    // jpa
+//    @Autowired
+//    private EntityManager em;
+
+    // spring data jpa
+    private final MemberRepository memberRepository;
+
+//    @Bean
+//    public MemberRepository memberRepository() {
+//        return new JpaMemberRepository(em);
+//    }
 
 //    @Bean
     public MemberService memberService() {
-        return new MemberService(memberRepository());
+        return new MemberService(memberRepository);
     }
 }
