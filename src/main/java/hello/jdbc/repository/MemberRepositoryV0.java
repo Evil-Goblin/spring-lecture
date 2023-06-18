@@ -5,6 +5,7 @@ import hello.jdbc.domain.Member;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @Slf4j
@@ -28,6 +29,33 @@ public class MemberRepositoryV0 {
             throw (e);
         } finally {
             close(connection, pstmt, null);
+        }
+    }
+
+    public Member findById(String memberId) throws SQLException {
+        String sql = "select * from member where member_id = ?";
+
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = getConnection();
+            pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, memberId);
+            resultSet = pstmt.executeQuery();
+            if (resultSet.next()) {
+                Member member = new Member();
+                member.setMemberId(resultSet.getString("member_id"));
+                member.setMoney(resultSet.getInt("money"));
+                return member;
+            }
+            throw new NoSuchElementException("member not found memberId=" + memberId);
+        } catch (SQLException e) {
+            log.error("db error", e);
+            throw (e);
+        } finally {
+            close(connection, pstmt, resultSet);
         }
     }
 
