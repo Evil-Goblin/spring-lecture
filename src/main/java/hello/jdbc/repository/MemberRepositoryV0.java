@@ -59,6 +59,49 @@ public class MemberRepositoryV0 {
         }
     }
 
+    public void update(String memberId, int money) throws SQLException {
+        String sql = "update member set money=? where member_id = ?";
+
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = getConnection();
+            pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, money);
+            pstmt.setString(2, memberId);
+            int resultSize = pstmt.executeUpdate();
+            log.info("resultSize = {}", resultSize);
+        } catch (SQLException e) {
+            log.error("db error", e);
+            throw (e);
+        } finally {
+            close(connection, pstmt, resultSet);
+        }
+    }
+
+    public void delete(String memberId) throws SQLException {
+        String sql = "delete from member where member_id=?";
+
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = getConnection();
+            pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, memberId);
+            int resultSize = pstmt.executeUpdate();
+            log.info("resultSize = {}", resultSize);
+        } catch (SQLException e) {
+            log.error("db error", e);
+            throw (e);
+        } finally {
+            close(connection, pstmt, resultSet);
+        }
+    }
+
     private void close(Connection conn, Statement stmt, ResultSet rs) {
         if (rs != null) {
             try {
