@@ -4,8 +4,6 @@ import hello.itemservice.domain.Item;
 import hello.itemservice.repository.ItemRepository;
 import hello.itemservice.repository.ItemSearchCond;
 import hello.itemservice.repository.ItemUpdateDto;
-import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -94,7 +92,6 @@ public class JdbcTemplateItemRepositoryV1 implements ItemRepository {
             param.add(maxPrice);
         }
 
-
         return template.query(sql, itemRowMapper(), param.toArray());
     }
 
@@ -102,7 +99,7 @@ public class JdbcTemplateItemRepositoryV1 implements ItemRepository {
         return ((rs, rowNum) -> {
             Item item = new Item();
             item.setId(rs.getLong("id"));
-            item.setItemName("item_name");
+            item.setItemName(rs.getString("item_name"));
             item.setPrice(rs.getInt("price"));
             item.setQuantity(rs.getInt("quantity"));
             return item;
