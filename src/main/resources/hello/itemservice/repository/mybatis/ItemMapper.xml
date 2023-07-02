@@ -2,6 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="hello.itemservice.repository.mybatis.ItemMapper">
+    <sql id="itemColumn"> id, item_name, price, quantity </sql>
+
     <insert id="save" useGeneratedKeys="true" keyProperty="id">
         insert into item (item_name, price, quantity)
         values (#{itemName}, #{price}, #{quantity})
@@ -16,13 +18,15 @@
     </update>
 
     <select id="findById" resultType="Item"> <!-- mybatis.type-aliases-package 옵션에 설정한 범위만큼 생략 가능 ( 실제로는 hello.itemservice.domain.Item ) -->
-        select id, item_name, price, quantity
+        select
+            <include refid="itemColumn"></include>
         from item
         where id = #{id}
     </select>
 
     <select id="findAll" resultType="Item">
-        select id, item_name, price, quantity
+        select
+            <include refid="itemColumn"></include>
         from item
         <where> <!-- 동적 쿼리 -->
             <if test="itemName != null and itemName != ''">
