@@ -20,6 +20,7 @@ public class MyBatisItemRepository implements ItemRepository {
 
     @Override
     public Item save(Item item) {
+        log.info("itemMapper class = {}", itemMapper.getClass()); // itemMapper class = class jdk.proxy2.$Proxy66
         itemMapper.save(item);
         return item;
     }
