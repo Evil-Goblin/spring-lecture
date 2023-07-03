@@ -14,3 +14,6 @@
 - `application.properties`에 `mybatis.mapper-locations=classpath:mapper/**/*.xml` 이 옵션을 적용하면된다.
   - 해당 옵션 적용시 `resource/mapper`를 포함한 하위 디렉토리의 XML파일을 XML매핑파일로 인식한다.
   - 파일이름 또한 자유롭게 설정 가능하다.
+
+### Gradle dependency 버전 변경
+- `ext["hibernate.version"] = "x.x.x"`
