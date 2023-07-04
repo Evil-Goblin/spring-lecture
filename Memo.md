@@ -18,7 +18,7 @@
 ### Gradle dependency 버전 변경
 - `ext["hibernate.version"] = "x.x.x"`
 
-### `QueryDSL` 종속성 설치시 `java: java.lang.NoClassDefFoundError: javax/persistence/Entity` 에러
+### `Querydsl` 종속성 설치시 `java: java.lang.NoClassDefFoundError: javax/persistence/Entity` 에러
 - 우선 모든 종속성을 최신으로 업데이트해주었다.
 - 그럼에도 해결되지 않아 해당 문제를 검색해보니 특정 종속성 뒤에 `:jakarta`를 붙여야 한다고 하여
 ```Groovy
@@ -29,3 +29,8 @@ annotationProcessor 'jakarta.persistence:jakarta.persistence-api:3.1.0'
 ```
 - 위와 같이 고쳐주었더니 정상동작하였다.
 - 정확하게 어느지점이 문제였던 건지 다시 전체 업데이트 전으로 돌려 테스트해본 결과 `annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"` 이것만 변경해주면 되는 것을 확인하였다.
+
+### `Querydsl` 종속성 설치시 `jakarta`와 `javax`사이에서 계속 문제가 발생
+- `implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'`요것도 해주어야한다.
+- 버전을 명시하지 않는 `implementation 'com.querydsl:querydsl-jpa:jakarta'` 이것이 되지 않기 때문에 이 친구는 상관 없지 않나 생각했는데 계속 `jakarta`를 불러야하는 곳에서 `javax`를 부르길래 확인해보니 이 친구가 `javax`라서 그렇더라....
+- 해서 버전 특정해주고 `jakarta`로 변경하여 해결하였다.
