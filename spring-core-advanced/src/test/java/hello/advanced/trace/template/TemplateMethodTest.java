@@ -43,4 +43,27 @@ public class TemplateMethodTest {
         template1.execute();
         template2.execute();
     }
+
+    @Test
+    void templateMethodV2() {
+        AbstractTemplate template1 = new AbstractTemplate() {
+            @Override
+            protected void call() {
+                log.info("biz logic1 anonymous");
+            }
+        };
+
+        AbstractTemplate template2 = new AbstractTemplate() {
+            @Override
+            protected void call() {
+                log.info("biz logic2 anonymous");
+            }
+        };
+
+        log.info("클래스 이름1={}", template1.getClass());
+        log.info("클래스 이름2={}", template2.getClass());
+
+        template1.execute();
+        template2.execute();
+    }
 }
