@@ -1,6 +1,7 @@
 package hello.advanced.trace.strategy;
 
 import hello.advanced.trace.strategy.code.strategy.ContextV1;
+import hello.advanced.trace.strategy.code.strategy.Strategy;
 import hello.advanced.trace.strategy.code.strategy.StrategyLogic1;
 import hello.advanced.trace.strategy.code.strategy.StrategyLogic2;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +44,59 @@ public class ContextV1Test {
 
         StrategyLogic2 strategyLogic2 = new StrategyLogic2();
         ContextV1 contextV2 = new ContextV1(strategyLogic2);
+        contextV2.execute();
+    }
+
+    @Test
+    void strategyV2() {
+        Strategy bizLogic1Anonymous = new Strategy() {
+            @Override
+            public void call() {
+                log.info("biz logic1 anonymous");
+            }
+        };
+
+        ContextV1 contextV1 = new ContextV1(bizLogic1Anonymous);
+        contextV1.execute();
+
+        Strategy bizLogic2Anonymous = new Strategy() {
+            @Override
+            public void call() {
+                log.info("biz logic2 anonymous");
+            }
+        };
+
+        ContextV1 contextV2 = new ContextV1(bizLogic2Anonymous);
+        contextV2.execute();
+    }
+
+    @Test
+    void strategyV3() {
+
+        ContextV1 contextV1 = new ContextV1(new Strategy() {
+            @Override
+            public void call() {
+                log.info("biz logic1 anonymous");
+            }
+        });
+        contextV1.execute();
+
+        ContextV1 contextV2 = new ContextV1(new Strategy() {
+            @Override
+            public void call() {
+                log.info("biz logic2 anonymous");
+            }
+        });
+        contextV2.execute();
+    }
+
+    @Test
+    void strategyV4() {
+
+        ContextV1 contextV1 = new ContextV1(() -> log.info("biz logic1 anonymous"));
+        contextV1.execute();
+
+        ContextV1 contextV2 = new ContextV1(() -> log.info("biz logic2 anonymous"));
         contextV2.execute();
     }
 }
