@@ -1,8 +1,6 @@
 package hello.proxy;
 
-import hello.proxy.config.AppV1Config;
-import hello.proxy.config.AppV2Config;
-import hello.proxy.config.v1_proxy.InterfaceProxyConfig;
+import hello.proxy.config.v1_proxy.ConcreteProxyConfig;
 import hello.proxy.trace.logtrace.LogTrace;
 import hello.proxy.trace.logtrace.ThreadLocalLogTrace;
 import org.springframework.boot.SpringApplication;
@@ -11,8 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 
 //@Import({AppV1Config.class, AppV2Config.class})
-@Import({InterfaceProxyConfig.class, AppV2Config.class})
-@SpringBootApplication(scanBasePackages = "hello.proxy.app") //주의
+@Import(ConcreteProxyConfig.class)
+@SpringBootApplication(scanBasePackages = "hello.proxy.app.v3") //주의 // spring boot 3이상부터 @Controller 어노테이션이 있어야만 컨트롤러로 인식이 되기 때문에 빈의 수동 등록을 위해 컴포넌트 스캔 범위에서 제외한다.
 public class ProxyApplication {
 
 	public static void main(String[] args) {
