@@ -17,7 +17,7 @@ public class BasicTest {
         A beanA = annotationConfigApplicationContext.getBean("BeanA", A.class);
         beanA.helloA();
 
-        Assertions.assertThatThrownBy(() -> annotationConfigApplicationContext.getBean("BeanB"))
+        Assertions.assertThatThrownBy(() -> annotationConfigApplicationContext.getBean(B.class))
                 .isInstanceOf(NoSuchBeanDefinitionException.class);
 
     }
