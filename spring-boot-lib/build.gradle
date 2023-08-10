@@ -24,7 +24,6 @@ repositories {
 
 dependencies {
 /*
-
     //1. 라이브러리 직접 지정
     //스프링 웹 MVC
     implementation 'org.springframework:spring-webmvc:6.0.4'
@@ -42,7 +41,7 @@ dependencies {
     //YML 관련
     implementation 'org.yaml:snakeyaml:1.33'
 */
-
+/*
     //2. 스프링 부트 라이브러리 버전 관리
     //스프링 웹, MVC
     implementation 'org.springframework:spring-webmvc'
@@ -59,11 +58,10 @@ dependencies {
     implementation 'org.slf4j:jul-to-slf4j'
     //YML 관련
     implementation 'org.yaml:snakeyaml'
+*/
 
-/*
     //3. 스프링 부트 스타터
     implementation 'org.springframework.boot:spring-boot-starter-web'
-*/
 }
 
 tasks.named('test') {
