@@ -26,5 +26,13 @@ public class EnvironmentCheck {
         log.info("env b={}", b);
         log.info("env c={}", c);
         log.info("env d={}", d);
+
+        String url = environment.getProperty("url");
+        String username = environment.getProperty("username");
+        String password = environment.getProperty("password");
+
+        log.info("url = {}", url);
+        log.info("username = {}", username);
+        log.info("password = {}", password);
     }
 }
