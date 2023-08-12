@@ -21,3 +21,6 @@ info:
   app:
     name: "test"
     test: "testtest"
+logging:
+  level:
+    hello.controller: debug
