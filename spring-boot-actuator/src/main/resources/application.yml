@@ -1,4 +1,11 @@
 management:
+  info:
+    java:
+      enabled: true
+    os:
+      enabled: true
+    env:
+      enabled: true
   endpoint:
     health:
       show-components: always
@@ -10,3 +17,7 @@ management:
       exposure:
         include: "*"
 #        exclude: "env,beans"
+info:
+  app:
+    name: "test"
+    test: "testtest"

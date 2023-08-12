@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.0.2'
     id 'io.spring.dependency-management' version '1.1.0'
+    id 'com.gorylenko.gradle-git-properties' version '2.4.1' // git info
 }
 
 group = 'hello'
@@ -35,4 +36,8 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+springBoot { // build-info.properties 파일을 만들어줘서 info actuator 에서 build정보를 확인할 수 있다.
+    buildInfo()
 }
