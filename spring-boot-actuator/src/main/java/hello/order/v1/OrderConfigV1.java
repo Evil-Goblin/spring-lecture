@@ -1,4 +1,4 @@
-package hello.order.v1.v0;
+package hello.order.v1;
 
 import hello.order.OrderService;
 import io.micrometer.core.instrument.MeterRegistry;

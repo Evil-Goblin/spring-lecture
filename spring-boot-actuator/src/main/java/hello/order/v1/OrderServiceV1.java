@@ -1,4 +1,4 @@
-package hello.order.v1.v0;
+package hello.order.v1;
 
 import hello.order.OrderService;
 import io.micrometer.core.instrument.Counter;
@@ -23,7 +23,7 @@ public class OrderServiceV1 implements OrderService {
         stock.decrementAndGet();
 
         Counter.builder("my.order") // /actuator/metrics/my.order
-                .tag("class", this.getClass().getName()) // /actuator/metrics/my.order?tag=class:hello.order.v1.v0.OrderServiceV1
+                .tag("class", this.getClass().getName()) // /actuator/metrics/my.order?tag=class:hello.order.v1.OrderServiceV1
                 .tag("method", "order") // /actuator/metrics/my.order?tag=method:order
                 .description("order")
                 .register(registry).increment();
@@ -34,8 +34,8 @@ public class OrderServiceV1 implements OrderService {
         log.info("취소");
         stock.incrementAndGet();
 
-        Counter.builder("my.order")
-                .tag("class", this.getClass().getName()) // /actuator/metrics/my.order?tag=class:hello.order.v1.v0.OrderServiceV1
+        Counter.builder("my.order") // /actuator/metrics/my.order
+                .tag("class", this.getClass().getName()) // /actuator/metrics/my.order?tag=class:hello.order.v1.OrderServiceV1
                 .tag("method", "cancel") // /actuator/metrics/my.order?tag=method:cancel
                 .description("order")
                 .register(registry).increment();
