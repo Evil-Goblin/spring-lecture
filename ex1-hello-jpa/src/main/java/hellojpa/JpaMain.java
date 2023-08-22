@@ -18,7 +18,7 @@ public class JpaMain {
         try {
             Member member = new Member();
             member.setId(1L);
-            member.setName("helloJPA");
+//            member.setName("helloJPA");
 
             entityManager.persist(member);
 
@@ -71,7 +71,7 @@ public class JpaMain {
             // 비영속 ( jpa와 무관계 )
             Member member = new Member();
             member.setId(1L);
-            member.setName("helloJPA");
+//            member.setName("helloJPA");
 
             System.out.println(" === BEFORE PERSIST === ");
             // 영속 ( 영속성컨텍스트를 통해 member 객체 관리 )
@@ -116,7 +116,6 @@ public class JpaMain {
                     .getResultList();
             for (Member member : result) {
                 System.out.println("member.getId() = " + member.getId());
-                System.out.println("member.getName() = " + member.getName());
             }
 
 //            System.out.println("findMember Id = " + findMember.getId());

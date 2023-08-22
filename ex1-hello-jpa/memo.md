@@ -21,3 +21,149 @@
   - entityManager.detach(entity)
   - entityManager.clear() - 영속성컨텍스트 초기화
   - entityManager.close() - 영속성컨텍스트 종료
+
+### Entity Mapping
+- 객체와 테이블 매핑
+  - @Entity, @Table
+- 필드와 칼럼 매핑
+  - @Column
+- 기본 키 매핑
+  - @Id
+- 연관관계 매핑
+  - @ManyToOne, @JoinColumn
+
+#### Mapping Annotation
+- @Column
+  - 칼럼 매핑
+- @Temporal
+  - 날짜 타입 매핑
+- @Enumerated
+  - enum 타입 매핑
+- @Lob
+  - BLOB, CLOB 매핑
+- @Transient
+  - 매핑 무시
+
+#### @Entity
+- 기본 생성자 필수
+- final 클래스, enum, interface, inner클래스 사용 불가
+- 저장할 필드에 final 사용 불가
+- name 속성값
+  - @Entity(name = "name")
+  - JPA에서 사용할 엔티티 이름
+  - 기본값: 클래스 이름 그대로 사용
+
+#### @Table
+- Entity와 매핑할 테이블 지정
+- 속성
+  - name: 매핑할 테이블 이름
+  - catalog: 데이터베이스 catalog 매핑
+  - schema: 데이터베이스 schema 매핑
+  - uniqueConstraints: DDL 생성 시에 유니크 제약 조건 생성
+
+#### @Column
+- 제약조건 추가
+  - nullable: null여부
+  - length: 길이
+  - unique: 유니크 제약조건 추가
+- 속성
+  - name: 필드와 매핑할 테이블 칼럼 이름
+  - insertable, updatable: 등록, 변경 기능 여부 (jpa를 통해 변경여부) default True
+  - nullable(DDL): not null 제약조건이 붙는다.
+  - unique(DDL): @Table의 uniqueConstraints와 같지만 한 칼럼에 간단히 제약을 걸 때 사용
+  - columnDefinition(DDL): 컬럼 정보를 직접 넣을 수 있다. (ex. `@Column(columnDefinition = "varchar(100) default 'EMPTY'")`)
+  - length(DDL): 문자 길이 제약조건, String에만 사용
+  - precision, scale(DDL): BigDecimal타입에 사용, 소수점 자릿수
+
+#### @Enumerated
+- value 속성
+  - EnumType.ORDINAL: enum 순서를 데이터베이스에 저장(정수값)
+  - EnumType.STRING: enum 이름을 데이터베이스에 저장(문자열)
+- ORDINAL 사용시 ENUM 변경에 따라 저장된 값과 Enum의 값이 달라지기 때문에 STRING을 써야한다.
+
+#### @Temporal
+- LocalDate, LocalDateTime 사용시 생략 가능(최신 하이버네이트)
+- value 속성
+  - TemporalType.DATE: 날짜, 데이터베이스 date 타입과 매핑 (2013-10-11)
+  - TemporalType.TIME: 시간, 데이터베이스 time 타입과 매핑 (11:11:11)
+  - TemporalType.TIMESTAMP: 날짜와 시간, 데이터베이스 timestamp 타입과 매핑 (2013-10-11 11:11:11)
+
+#### @Lob
+- 데이터베이스 BLOB, CLOB 타입과 매핑
+- @Lob 에는 속성이 없다.
+- 매핑하는 필드 타입이 문자면 CLOB매핑, 나머지는 BLOB매핑
+  - CLOB: String, char[], java.sql.CLOB
+  - BLOB: byte[], java.sql.BLOB
+
+### 데이터베이스 스키마 자동 생성
+- hibernate.hbm2ddl.auto
+  - create: 기존 테이블 삭제 후 다시 생성 (Drop + Create)
+  - create-drop: create와 같으나 종료시점에 테이블 DROP
+  - update: 변경분만 반영 (운영DB에는 사용하면 안됨) (추가된 부분은 추가되지만 삭제된 부분은 변경되지 않는다.)
+  - validate: 엔티티와 테이블이 정상 매핑되었는지만 확인
+  - none: 사용하지 않음
+
+### 기본 키 매핑
+#### 기본 키 매핑 어노테이션
+- @Id
+- @GeneratedValue
+
+#### 기본 키 매핑 방법
+- 직접 할당: @Id만 사용
+- 자동 생성(@GeneratedValue)
+  - IDENTITY: 데이터베이스에 위임, MYSQL
+  - SEQUENCE: 데이터베이스 시퀀스 오브젝트 사용, ORACLE
+    - @SequenceGenerator 필요
+    - ```java
+      @Entity
+      @SequenceGenerator(
+          name = "MEMBER_SEQ_GENERATOR",
+          sequenceName = "MEMBER_SEQ",
+          initialValue = 1, allocationSize = 1)
+      public class SeqMember {
+          @Id
+          @GeneratedValue(strategy = GenerationType.SEQUENCE,
+              generator = "MEMBER_SEQ_GENERATOR")
+          private Long id;
+      }
+      ```
+  - TABLE: 키 생성용 테이블 사용, 모든 DB에서 사용
+    - @TableGenerator 필요
+    - ```sql
+      create table MY_SEQUENCES (
+          sequence_name varchar(255) not null,
+          next_val bigint,
+          primary key ( sequence_name )
+      )
+      ```
+    - ```java
+      @Entity
+      @TableGenerator(
+          name = "MEMBER_SEQ_GENERATOR",
+          table = "MY_SEQUENCES",
+          pkColumnValue = "MEMBER_SEQ", allocationSize = 1)
+      public class TableMember {
+          @Id
+          @GeneratedValue(strategy = GenerationType.TABLE,
+              generator = "MEMBER_SEQ_GENERATOR")
+          private Long id;
+      }
+      ```
+  - AUTO: db에 따라 자동 지정, 기본값
+
+#### 자동생성 특징
+- IDENTITY
+  - id값을 null로 쿼리를 날리게 된다.
+  - 하지만 영속성컨텍스트는 커밋시점에 쿼리가 날라가도록 되어있기 때문에 쿼리를 하기 전에 해당 id를 알지 못한다.
+  - 때문에 자동생성의 경우 entityManager.persist()를 수행하는 순간 insert를 수행하고 id값을 가져오게 된다.
+- SEQUENCE
+  - SEQUENCE로 부터 id를 발급받기 때문에 persist() 수행시 id만을 발급받아온다.
+  - 이후 commit시점에 발급받은 id를 이용해 쿼리를 수행한다.
+  - SEQUENCE 의 allocationSize를 1이 아닌 큰 수로 잡을 시 미리 시퀀스값을 메모리로 가져와놓고 사용한다.
+  - persist 수행시 두번의 sequence를 호출한다.
+    - ex. 50으로 설정시
+    - 최소 수행시 1, 51가져온다. (두번 수행)
+    - 이후 persist 수행시 51까지는 메모리에서 계속증가시키며 사용한다. (추가로 db에 요청하지 않는다.)
+  - allocationSize를 통해 성능 최적화를 노릴 수 있다.
+- TABLE
+  - SEQUENCE와 비슷하게 allocationSize를 사용할 수 있다.
