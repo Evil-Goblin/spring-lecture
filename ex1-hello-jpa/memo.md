@@ -167,3 +167,40 @@
   - allocationSize를 통해 성능 최적화를 노릴 수 있다.
 - TABLE
   - SEQUENCE와 비슷하게 allocationSize를 사용할 수 있다.
+
+### Entity간의 관계
+- Foreign key를 통해 다른 테이블의 Primary Key에 매칭을 할 때
+  - @ManyToOne @JoinColume(name = "<Primary key>") 를 통해 다대일 상관관계 구축
+- Primary Key에 다른 테이블의 Foreign key 매핑
+  - @OneToMany(mappedBy = "<Column>") 을 통해 일대다 매핑 (List 자료구조 사용)
+
+#### 연관관계의 주인
+- mappedBy 를 통해 매핑하는 객체는 연관관계의 주인이 아니다.
+- 대체로는 다대일의 다에 해당하는 쪽이(Foreign key) 연관관계의 주인이다.
+- 주인의 값을 변경하면 db에 영향이 가지만(쓰기) 주인이 아닌 쪽의 변경은 db에 영향이 가지 않는다.(읽기 전용)
+
+#### 양방향 연관관계 주의점
+- 주인의 값을 변경해야 적용이 되기 때문에 주인의 값을 설정하는 것이 중요하다.
+- 하지만 반대쪽의 값을 설정하지 않으면 순수 자바객체로서의 접근시 문제가 생길 수 있다.
+- 때문에 양쪽의 값을 모두 설정하는 것이 중요하다.
+- 연관관계 편의 메소드를 생성할 필요가 있다.
+  - ```java
+    public void setTeam(Team team) {
+        this.team = team;
+        team.getMembers().add(this);
+    }
+    ```
+  - 양쪽의 값을 설정하는 것이 코드상 두줄을 차지하기 때문에 실수할 확률이 있다.
+  - 이에 위와 같은 편의 메소드를 통해 한번에 세팅이 가능하다.
+
+- toString(), lombok, JSON 생성 라이브러리 등 사용 주의
+  - toString을 예로 들면 a의 toString에서 참조중인 b의 toString을 호출하고 b가 가진 a들의 toString을 호출하는 순환 참조가 발생한다.
+  - JSON 의 경우 Controller 등의 매개변수로 받거나 반환하는 경우 문제가 될 수 있기 때문에 DTO를 이용하고 Entity는 절대 사용해선 안된다.
+
+#### 양방향 매핑 정리
+- 단방향 매핑만으로 이미 연관관계 매핑은 완료
+- 양방향 매핑은 반대 방향으로 조회 기능이 추가된 것 뿐
+- JPQL에서 역방향 탐색할 일이 많다.
+- *단반향 매핑을 잘 하고 양방향 매핑은 필요할때 추가하면 된다.* (테이블에 영향을 주지 않는다.)
+
+# *연관관계의 주인은 외래 키의 위치를 기준으로 정해야 한다.*

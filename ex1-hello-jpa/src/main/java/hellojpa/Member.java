@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-@Entity
+//@Entity
 public class Member {
 
     @Id
