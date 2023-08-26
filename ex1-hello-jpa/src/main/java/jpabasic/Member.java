@@ -9,7 +9,7 @@ import javax.persistence.*;
 @ToString // 주의!! Team에도 ToString을 적용하면 순환 호출이 발생한다.
 @Getter
 @Setter
-@Entity
+//@Entity
 public class Member {
 
     @Id
