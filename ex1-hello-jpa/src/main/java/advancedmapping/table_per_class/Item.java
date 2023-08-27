@@ -2,7 +2,7 @@ package advancedmapping.table_per_class;
 
 import javax.persistence.*;
 
-@Entity
+//@Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @DiscriminatorColumn // 단일 테이블 전략의 경우 해당 어노테이션이 없어도 DTYPE 생성
 public abstract class Item {

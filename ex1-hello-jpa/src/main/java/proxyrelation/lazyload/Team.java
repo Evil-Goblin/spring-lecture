@@ -1,16 +1,16 @@
-package advancedmapping.mappedsuperclass;
+package proxyrelation.lazyload;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-//@Entity
-public class Seller extends BaseEntity {
+@Entity
+public class Team {
 
     @Id @GeneratedValue
     private Long id;
 
-    private String shopName;
+    private String name;
 
     public Long getId() {
         return id;
@@ -20,11 +20,11 @@ public class Seller extends BaseEntity {
         this.id = id;
     }
 
-    public String getShopName() {
-        return shopName;
+    public String getName() {
+        return name;
     }
 
-    public void setShopName(String shopName) {
-        this.shopName = shopName;
+    public void setName(String name) {
+        this.name = name;
     }
 }
