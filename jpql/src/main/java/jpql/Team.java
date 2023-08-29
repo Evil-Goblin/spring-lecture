@@ -1,5 +1,7 @@
 package jpql;
 
+import org.hibernate.annotations.BatchSize;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -18,6 +20,7 @@ public class Team {
         return id;
     }
 
+    @BatchSize(size = 100) // LazyJoin 시 N + 1 이 아닌 BatchSize 만큼 한번에 가져오도록 한다. (team 조회 이후 members 를 루프시마다 각각 쿼리가 수행되는 것을 방지한다. )
     @OneToMany(mappedBy = "team")
     private List<Member> members = new ArrayList<>();
 

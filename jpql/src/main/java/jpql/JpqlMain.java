@@ -388,6 +388,272 @@ public class JpqlMain {
         entityManagerFactory.close();
     }
 
+    public static void fetchjoin() {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hello");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        try {
+
+            Team teamA = new Team();
+            teamA.setName("teamA");
+            entityManager.persist(teamA);
+
+            Team teamB = new Team();
+            teamB.setName("teamB");
+            entityManager.persist(teamB);
+
+            Member member = new Member();
+            member.setUsername("memberA");
+            member.setAge(10);
+            member.changeTeam(teamA);
+            member.setType(MemberType.USER);
+            entityManager.persist(member);
+
+            Member member2 = new Member();
+            member2.setUsername("memberB");
+            member2.setAge(10);
+            member2.changeTeam(teamA);
+            member2.setType(MemberType.USER);
+            entityManager.persist(member2);
+
+            Member member3 = new Member();
+            member3.setUsername("memberC");
+            member3.setAge(10);
+            member3.changeTeam(teamB);
+            member3.setType(MemberType.USER);
+            entityManager.persist(member3);
+
+            entityManager.flush();
+            entityManager.clear();
+
+            // N + 1 문제 발생
+            // Team 이 지연 로딩으로 설정되어 있기 때문에 Member 조회 이후 Team을 추가로 조회하게 된다.
+            // fetch join 으로 해결한다.
+//            String query = "select m from Member m";
+
+//            String query = "select m from Member m join fetch m.team";
+//
+//            List<Member> resultList = entityManager.createQuery(query, Member.class)
+//                    .getResultList();
+//
+//            for (Member s : resultList) {
+//                System.out.println("s = " + s + " team = " + s.getTeam());
+//            }
+
+            // 실제 쿼리에서 distinct가 되지 않는 문장도 애플리케이션 내에서 중복을 제거해준다.
+            // fetch join 은 추가 쿼리 없이 한번에 다 땡겨오기 때문에 즉시 로딩이라고 볼 수 있다. ( N + 1 해소 )
+            String query = "select distinct t from Team t join fetch t.members"; /*where t.name = 'teamA'";*/
+            List<Team> resultList = entityManager.createQuery(query, Team.class).getResultList();
+            System.out.println("resultList.size() = " + resultList.size());
+
+            for (Team team : resultList) {
+                System.out.println("team = " + team);
+                for (Member teamMember : team.getMembers()) {
+                    System.out.println("teamMember = " + teamMember);
+                }
+            }
+
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+
+        entityManagerFactory.close();
+    }
+
+    public static void queryUsedEntity() {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hello");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        try {
+
+            Team teamA = new Team();
+            teamA.setName("teamA");
+            entityManager.persist(teamA);
+
+            Team teamB = new Team();
+            teamB.setName("teamB");
+            entityManager.persist(teamB);
+
+            Member member = new Member();
+            member.setUsername("memberA");
+            member.setAge(10);
+            member.changeTeam(teamA);
+            member.setType(MemberType.USER);
+            entityManager.persist(member);
+
+            Member member2 = new Member();
+            member2.setUsername("memberB");
+            member2.setAge(10);
+            member2.changeTeam(teamA);
+            member2.setType(MemberType.USER);
+            entityManager.persist(member2);
+
+            Member member3 = new Member();
+            member3.setUsername("memberC");
+            member3.setAge(10);
+            member3.changeTeam(teamB);
+            member3.setType(MemberType.USER);
+            entityManager.persist(member3);
+
+            entityManager.flush();
+            entityManager.clear();
+
+            /**
+             * select
+             *     member0_.id as id1_0_,
+             *     member0_.age as age2_0_,
+             *     member0_.TEAM_ID as team_id5_0_,
+             *     member0_.type as type3_0_,
+             *     member0_.username as username4_0_
+             * from
+             *     Member member0_
+             * where
+             *     member0_.id=?
+             */
+            String query = "select m from Member m where m = :member";
+            Member findMember = entityManager.createQuery(query, Member.class)
+                    .setParameter("member", member) // member 객체를 파라미터로 넘겼지만 실제 쿼리는 id로 수행된다.
+                    .getSingleResult();
+            System.out.println("findMember = " + findMember);
+
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+
+        entityManagerFactory.close();
+    }
+
+    public static void namedQuery() {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hello");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        try {
+
+            Team teamA = new Team();
+            teamA.setName("teamA");
+            entityManager.persist(teamA);
+
+            Team teamB = new Team();
+            teamB.setName("teamB");
+            entityManager.persist(teamB);
+
+            Member member = new Member();
+            member.setUsername("memberA");
+            member.setAge(10);
+            member.changeTeam(teamA);
+            member.setType(MemberType.USER);
+            entityManager.persist(member);
+
+            Member member2 = new Member();
+            member2.setUsername("memberB");
+            member2.setAge(10);
+            member2.changeTeam(teamA);
+            member2.setType(MemberType.USER);
+            entityManager.persist(member2);
+
+            Member member3 = new Member();
+            member3.setUsername("memberC");
+            member3.setAge(10);
+            member3.changeTeam(teamB);
+            member3.setType(MemberType.USER);
+            entityManager.persist(member3);
+
+            entityManager.flush();
+            entityManager.clear();
+
+            List<Member> resultList = entityManager.createNamedQuery("Member.findByUsername", Member.class)
+                    .setParameter("username", "memberA")
+                    .getResultList();
+            for (Member member1 : resultList) {
+                System.out.println("member1 = " + member1);
+            }
+
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+
+        entityManagerFactory.close();
+    }
+
+    public static void bulk() {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hello");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        try {
+
+            Team teamA = new Team();
+            teamA.setName("teamA");
+            entityManager.persist(teamA);
+
+            Team teamB = new Team();
+            teamB.setName("teamB");
+            entityManager.persist(teamB);
+
+            Member member = new Member();
+            member.setUsername("memberA");
+            member.setAge(10);
+            member.changeTeam(teamA);
+            member.setType(MemberType.USER);
+            entityManager.persist(member);
+
+            Member member2 = new Member();
+            member2.setUsername("memberB");
+            member2.setAge(10);
+            member2.changeTeam(teamA);
+            member2.setType(MemberType.USER);
+            entityManager.persist(member2);
+
+            Member member3 = new Member();
+            member3.setUsername("memberC");
+            member3.setAge(10);
+            member3.changeTeam(teamB);
+            member3.setType(MemberType.USER);
+            entityManager.persist(member3);
+
+            entityManager.flush();
+            entityManager.clear();
+
+            String query = "update Member m set m.age = 20";
+
+            int i = entityManager.createQuery(query)
+                    .executeUpdate();
+            System.out.println("i = " + i);
+
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+
+        entityManagerFactory.close();
+    }
+
     public static void main(String[] args) {
 
 //        projection();
@@ -396,6 +662,10 @@ public class JpqlMain {
 //        subQuery();
 //        type();
 //        caseQuery();
-        jpqlFunc();
+//        jpqlFunc();
+//        fetchjoin();
+//        queryUsedEntity();
+//        namedQuery();
+        bulk();
     }
 }
