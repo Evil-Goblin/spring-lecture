@@ -9,6 +9,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+@Setter
 @Getter
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
