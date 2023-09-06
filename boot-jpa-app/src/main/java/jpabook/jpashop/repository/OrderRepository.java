@@ -4,7 +4,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import jpabook.jpashop.domain.Order;
-import jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -94,10 +93,24 @@ public class OrderRepository {
         return query.getResultList();
     }
 
-    public List<Order> findAllWithMemberDelivery() {
+    public List<Order> findAllWithMemberDelivery(int offset, int limit) {
         return em.createQuery("select o from Order o " +
-                " join fetch o.member m " +
-                " join fetch o.delivery d", Order.class)
+                        " join fetch o.member m " +
+                        " join fetch o.delivery d", Order.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
+    public List<Order> findAllWithItem() { // distinct 를 이용해서 중복을 제거한다.
+        // jpql 의 distinct 의 경우 sql의 distinct 적용 이후 어플리케이션 내에서 중복을 한번 더 제거한다.
+        // 하지만 distinct 는 페이징을 적용할 수 없다는 문제가 있다. (실제 쿼리에 페이징이 나가지 않는다. limit, offset)
+        // 페이징이 어플리케이션 메모리 내에서 페이징이 이루어진다.
+        return em.createQuery("select distinct o from Order o " +
+                        " join fetch o.member m " +
+                        " join fetch o.delivery d " +
+                        " join fetch o.orderItems oi " +
+                        " join fetch oi.item i", Order.class)
                 .getResultList();
     }
 }

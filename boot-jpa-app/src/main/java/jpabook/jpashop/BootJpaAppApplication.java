@@ -1,6 +1,6 @@
 package jpabook.jpashop;
 
-//import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
+import com.fasterxml.jackson.datatype.hibernate5.jakarta.Hibernate5JakartaModule;
 import jpabook.jpashop.repository.MemberRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,11 +18,11 @@ public class BootJpaAppApplication {
         return new TestDateInit(memberRepository);
     }
 
-//    @Bean
-//    Hibernate5Module hibernate5Module() {
-//        Hibernate5Module hibernate5Module = new Hibernate5Module();
-//        hibernate5Module.configure(Hibernate5Module.Feature.FORCE_LAZY_LOADING, true);
-//        return hibernate5Module;
-//    }
+    @Bean
+    Hibernate5JakartaModule hibernate5Module() {
+        Hibernate5JakartaModule hibernate5Module = new Hibernate5JakartaModule();
+        hibernate5Module.configure(Hibernate5JakartaModule.Feature.FORCE_LAZY_LOADING, true);
+        return hibernate5Module;
+    }
 
 }
