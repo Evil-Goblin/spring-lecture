@@ -21,7 +21,7 @@ public class OrderItem {
     private Long id;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) // 요거 EAGER 로 변경하면 v3.1 에서 쿼리 3개 나가던거 2개 나가게 된다.
     @JoinColumn(name = "item_id")
     private Item item;
 

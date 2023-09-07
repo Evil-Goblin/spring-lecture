@@ -61,7 +61,7 @@ public class OrderSimpleApiController {
 
     @GetMapping("/api/v3/simple-orders") // fetch join 으로 쿼리를 한번만 나가게 함으로서 최적화한다.
     public List<SimpleOrderDto> ordersV3() {
-        List<Order> allWithMemberDelivery = orderRepository.findAllWithMemberDelivery(0, 0);
+        List<Order> allWithMemberDelivery = orderRepository.findAllWithMemberDelivery();
         return allWithMemberDelivery.stream()
                 .map(SimpleOrderDto::new)
                 .collect(Collectors.toList());
