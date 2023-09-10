@@ -1,5 +1,8 @@
 package study.datajpa.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -31,4 +34,11 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findListByUsername(String username); // 컬렉션 (컬렉션은 조회 결과가 없을 경우 Empty 컬렉션으로 리턴된다. NotNull)
     Member findMemberByUsername(String username); // 단건 (단건 조회는 조회 결과가 없을 경우 Null 이 리턴된다.
     Optional<Member> findOptionalByUsername(String username); // 단건 Optional (만약 조회 결과가 여럿인 경우 예외발생...)
+
+    Page<Member> findByAge(int age, Pageable pageable);
+    Slice<Member> findSliceByAge(int age, Pageable pageable);
+
+    @Query(value = "select m from Member m left join m.team t",
+            countQuery = "select count(m) from Member m") // count 쿼리 별도 분리
+    Page<Member> findCustomByAge(int age, Pageable pageable);
 }

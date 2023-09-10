@@ -3,6 +3,10 @@ package study.datajpa.repository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.dto.MemberDto;
@@ -148,5 +152,75 @@ class MemberRepositoryTest {
 
         Optional<Member> aaa2 = repository.findOptionalByUsername("AAA");
         System.out.println("aaa2.get() = " + aaa2.get());
+    }
+
+    @Test
+    void page() throws Exception {
+        repository.save(new Member("member1", 10));
+        repository.save(new Member("member2", 10));
+        repository.save(new Member("member3", 10));
+        repository.save(new Member("member4", 10));
+        repository.save(new Member("member5", 10));
+
+        PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC,
+                "username"));
+        Page<Member> page = repository.findByAge(10, pageRequest);
+
+        List<Member> content = page.getContent(); //조회된 데이터
+        for (Member member : content) {
+            System.out.println("member = " + member);
+        }
+        assertThat(content.size()).isEqualTo(3); //조회된 데이터 수
+        assertThat(page.getTotalElements()).isEqualTo(5); //전체 데이터 수
+        assertThat(page.getNumber()).isEqualTo(0); //페이지 번호
+        assertThat(page.getTotalPages()).isEqualTo(2); //전체 페이지 번호
+        assertThat(page.isFirst()).isTrue(); //첫번째 항목인가?
+        assertThat(page.hasNext()).isTrue(); //다음 페이지가 있는가?
+    }
+
+    @Test
+    void slice() throws Exception {
+        repository.save(new Member("member1", 10));
+        repository.save(new Member("member2", 10));
+        repository.save(new Member("member3", 10));
+        repository.save(new Member("member4", 10));
+        repository.save(new Member("member5", 10));
+
+        PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC,
+                "username"));
+        Slice<Member> page = repository.findSliceByAge(10, pageRequest); // 얘는 size + 1 씩 가져온다.
+
+        List<Member> content = page.getContent(); //조회된 데이터
+        for (Member member : content) {
+            System.out.println("member = " + member);
+        }
+        assertThat(content.size()).isEqualTo(3); //조회된 데이터 수
+        assertThat(page.getNumber()).isEqualTo(0); //페이지 번호
+        assertThat(page.isFirst()).isTrue(); //첫번째 항목인가?
+        assertThat(page.hasNext()).isTrue(); //다음 페이지가 있는가?
+    }
+
+    @Test
+    void customPage() throws Exception {
+        repository.save(new Member("member1", 10));
+        repository.save(new Member("member2", 10));
+        repository.save(new Member("member3", 10));
+        repository.save(new Member("member4", 10));
+        repository.save(new Member("member5", 10));
+
+        PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC,
+                "username"));
+        Page<Member> page = repository.findCustomByAge(10, pageRequest);
+
+        List<Member> content = page.getContent(); //조회된 데이터
+        for (Member member : content) {
+            System.out.println("member = " + member);
+        }
+        assertThat(content.size()).isEqualTo(3); //조회된 데이터 수
+        assertThat(page.getTotalElements()).isEqualTo(5); //전체 데이터 수
+        assertThat(page.getNumber()).isEqualTo(0); //페이지 번호
+        assertThat(page.getTotalPages()).isEqualTo(2); //전체 페이지 번호
+        assertThat(page.isFirst()).isTrue(); //첫번째 항목인가?
+        assertThat(page.hasNext()).isTrue(); //다음 페이지가 있는가?
     }
 }
