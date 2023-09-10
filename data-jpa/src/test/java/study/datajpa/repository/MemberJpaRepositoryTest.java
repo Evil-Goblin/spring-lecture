@@ -57,7 +57,7 @@ class MemberJpaRepositoryTest {
     }
 
     @Test
-    public void findByUsernameAndAgeGreaterThan() {
+    void findByUsernameAndAgeGreaterThan() {
         Member m1 = new Member("AAA", 10);
         Member m2 = new Member("AAA", 20);
         repository.save(m1);
@@ -69,4 +69,16 @@ class MemberJpaRepositoryTest {
         assertThat(result.size()).isEqualTo(1);
     }
 
+    @Test
+    void bulkUpdate() {
+        repository.save(new Member("member1", 10));
+        repository.save(new Member("member2", 19));
+        repository.save(new Member("member3", 20));
+        repository.save(new Member("member4", 21));
+        repository.save(new Member("member5", 40));
+
+        int resultCount = repository.bulkAgePlus(20);
+
+        assertThat(resultCount).isEqualTo(3);
+    }
 }

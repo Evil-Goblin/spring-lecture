@@ -1,5 +1,6 @@
 package study.datajpa.repository;
 
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,6 +27,7 @@ class MemberRepositoryTest {
 
     @Autowired MemberRepository repository;
     @Autowired TeamRepository teamRepository;
+    @Autowired EntityManager em;
 
     @Test
     void memberTest() {
@@ -222,5 +224,31 @@ class MemberRepositoryTest {
         assertThat(page.getTotalPages()).isEqualTo(2); //전체 페이지 번호
         assertThat(page.isFirst()).isTrue(); //첫번째 항목인가?
         assertThat(page.hasNext()).isTrue(); //다음 페이지가 있는가?
+    }
+
+    @Test
+    void bulkUpdate() {
+        repository.save(new Member("member1", 10));
+        repository.save(new Member("member2", 19));
+        repository.save(new Member("member3", 20));
+        repository.save(new Member("member4", 21));
+        repository.save(new Member("member5", 40));
+
+        int resultCount = repository.bulkAgePlus(20);
+
+        List<Member> member5 = repository.findByUsername("member5");
+        Member member = member5.get(0);
+
+        assertThat(resultCount).isEqualTo(3);
+
+//        clearAutomatically 옵션을 통해 강제 초기화를 한 경우
+//        assertThat(member.getAge()).isNotEqualTo(41); // bulk 연산시 영속성 컨텍스트와 무관하게 수행되기 때문에 영속성컨텍스트와 실제 db값이 달라지게 된다.
+//
+//        em.clear(); // 영속성 컨텍스트를 초기화 해줘야 db의 값을 가져올 수 있다.
+//
+//        member5 = repository.findByUsername("member5");
+//        member = member5.get(0);
+
+        assertThat(member.getAge()).isEqualTo(41);
     }
 }
