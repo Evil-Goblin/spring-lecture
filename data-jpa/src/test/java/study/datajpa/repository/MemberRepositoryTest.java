@@ -307,4 +307,10 @@ class MemberRepositoryTest {
          */ // for update 쿼리가 추가된다.
         List<Member> result = repository.findLockByUsername("memberA");
     }
+
+    @Test
+    void callCustom() {
+        List<Member> memberCustom = repository.findMemberCustom();
+
+    }
 }
