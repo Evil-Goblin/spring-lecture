@@ -251,4 +251,27 @@ class MemberRepositoryTest {
 
         assertThat(member.getAge()).isEqualTo(41);
     }
+
+    @Test
+    void findMemberLazy() {
+        Team teamA = new Team("TeamA");
+        Team teamB = new Team("TeamB");
+        teamRepository.save(teamA);
+        teamRepository.save(teamB);
+
+        Member memberA = new Member("MemberA", 10, teamA);
+        Member memberB = new Member("MemberB", 10, teamB);
+        repository.save(memberA);
+        repository.save(memberB);
+
+        em.flush();
+        em.clear();
+
+        List<Member> all = repository.findAll();
+//        List<Member> all = repository.findMemberFetchJoin();
+        for (Member member : all) {
+            System.out.println("member = " + member.getUsername());
+            System.out.println("team = " + member.getTeam().getName());
+        }
+    }
 }
