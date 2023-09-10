@@ -274,4 +274,37 @@ class MemberRepositoryTest {
             System.out.println("team = " + member.getTeam().getName());
         }
     }
+
+    @Test
+    void queryHint() {
+        Member memberA = new Member("memberA", 10);
+        repository.save(memberA);
+        em.flush();
+        em.clear();
+
+        Member findMember = repository.findReadOnlyByUsername("memberA");
+        findMember.setUsername("member2");
+        em.flush();
+    }
+
+    @Test
+    void lock() {
+        Member memberA = new Member("memberA", 10);
+        repository.save(memberA);
+        em.flush();
+        em.clear();
+
+        /**
+         * select
+         *     m1_0.member_id,
+         *     m1_0.age,
+         *     m1_0.team_id,
+         *     m1_0.username
+         * from
+         *     member m1_0
+         * where
+         *     m1_0.username=? for update
+         */ // for update 쿼리가 추가된다.
+        List<Member> result = repository.findLockByUsername("memberA");
+    }
 }
