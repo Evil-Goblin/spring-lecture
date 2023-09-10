@@ -11,6 +11,12 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
+  data:
+    web:
+      pageable:
+        default-page-size: 10 # spring web paging default size
+        max-page-size: 2000
+        one-indexed-parameters: true # index parameter 의 시작값이 0 이 아닌 1이 된다. 하지만 Pageable 에 담기는 데이터들과 맞지 않게 된다....
 #logging.level:
 #  org.hibernate.SQL: debug
 #  org.hibernate.type: trace
