@@ -313,4 +313,83 @@ class MemberRepositoryTest {
         List<Member> memberCustom = repository.findMemberCustom();
 
     }
+
+    @Test
+    void projections() {
+        Team teamA = new Team("TeamA");
+        teamRepository.save(teamA);
+
+        Member memberA = new Member("MemberA", 10, teamA);
+        Member memberB = new Member("MemberB", 10, teamA);
+        repository.save(memberA);
+        repository.save(memberB);
+
+        em.flush();
+        em.clear();
+
+        List<UsernameOnly> memberA1 = repository.findProjectionsByUsername("MemberA");
+        for (UsernameOnly usernameOnly : memberA1) {
+            System.out.println("usernameOnly = " + usernameOnly.getUsername());
+        }
+    }
+
+    @Test
+    void projectionsDto() {
+        Team teamA = new Team("TeamA");
+        teamRepository.save(teamA);
+
+        Member memberA = new Member("MemberA", 10, teamA);
+        Member memberB = new Member("MemberB", 10, teamA);
+        repository.save(memberA);
+        repository.save(memberB);
+
+        em.flush();
+        em.clear();
+
+        List<UsernameOnlyDto> memberA1 = repository.findProjectionDtoByUsername("MemberA");
+        for (UsernameOnlyDto usernameOnly : memberA1) {
+            System.out.println("usernameOnly username = " + usernameOnly.getUsername());
+            System.out.println("usernameOnly age = " + usernameOnly.getAge());
+        }
+    }
+
+    @Test
+    void projectionGeneric() {
+        Team teamA = new Team("TeamA");
+        teamRepository.save(teamA);
+
+        Member memberA = new Member("MemberA", 10, teamA);
+        Member memberB = new Member("MemberB", 10, teamA);
+        repository.save(memberA);
+        repository.save(memberB);
+
+        em.flush();
+        em.clear();
+
+        List<UsernameOnlyDto> memberA1 = repository.findProjectionGenericByUsername("MemberA", UsernameOnlyDto.class);
+        for (UsernameOnlyDto usernameOnly : memberA1) {
+            System.out.println("usernameOnly username = " + usernameOnly.getUsername());
+            System.out.println("usernameOnly age = " + usernameOnly.getAge());
+        }
+    }
+
+    @Test
+    void projectionNested() {
+        Team teamA = new Team("TeamA");
+        teamRepository.save(teamA);
+
+        Member memberA = new Member("MemberA", 10, teamA);
+        Member memberB = new Member("MemberB", 10, teamA);
+        repository.save(memberA);
+        repository.save(memberB);
+
+        em.flush();
+        em.clear();
+
+        List<NestedClosedProjections> memberA1 = repository.findProjectionGenericByUsername("MemberA", NestedClosedProjections.class);
+        for (NestedClosedProjections nestedClosedProjections : memberA1) {
+            System.out.println("nestedClosedProjections.getUsername() = " + nestedClosedProjections.getUsername());
+            System.out.println("nestedClosedProjections.getTeam().getName() = " + nestedClosedProjections.getTeam().getName());
+        }
+    }
 }
