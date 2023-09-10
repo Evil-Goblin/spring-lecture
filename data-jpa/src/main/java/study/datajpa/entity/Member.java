@@ -12,7 +12,7 @@ import lombok.*;
 )
 @NamedEntityGraph(name = "Member.all", attributeNodes = @NamedAttributeNode("team"))
 @Entity
-public class Member {
+public class Member extends JpaBaseEntity {
     @Id @GeneratedValue
     @Column(name = "member_id")
     private Long id;
