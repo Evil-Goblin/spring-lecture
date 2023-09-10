@@ -45,7 +45,7 @@ public class MemberController {
         return all.map(m -> new MemberDto(m.getId(), m.getUsername(), null));
     }
 
-    @PostConstruct
+//    @PostConstruct
     public void init() {
         for (int i = 0; i < 100; i++) {
             memberRepository.save(new Member("user" + i, i));
