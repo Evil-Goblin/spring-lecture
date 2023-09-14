@@ -1,5 +1,6 @@
 package study.querydsl;
 
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -10,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import study.querydsl.entity.Member;
 import study.querydsl.entity.Team;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static study.querydsl.entity.QMember.member;
@@ -62,5 +65,27 @@ public class QueryDslBasicTest {
                 .fetchOne();
 
         assertThat(findMember.getUsername()).isEqualTo("memberA");
+    }
+
+    @Test
+    void search() {
+        Member memberA = jpaQueryFactory
+                .selectFrom(member)
+                .where(member.username.eq("memberA")
+                        .and(member.age.eq(10)))
+                .fetchOne();
+
+        assertThat(memberA.getUsername()).isEqualTo("memberA");
+
+        List<Member> members = jpaQueryFactory
+                .selectFrom(member)
+                .where(
+                        member.username.startsWith("member"), // , 을 이용할 시 and 연산이 된다.
+                        (member.age.between(10, 30)))
+                .fetch();
+
+        for (Member member : members) {
+            System.out.println("member = " + member);
+        }
     }
 }
