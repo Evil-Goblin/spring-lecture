@@ -1,5 +1,6 @@
 package study.querydsl;
 
+import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -87,5 +88,34 @@ public class QueryDslBasicTest {
         for (Member member : members) {
             System.out.println("member = " + member);
         }
+    }
+
+    @Test
+    public void resultFetch() {
+        List<Member> fetch = jpaQueryFactory
+                .selectFrom(member)
+                .fetch(); // list 조회
+
+        Member fetchOne = jpaQueryFactory
+                .selectFrom(member)
+                .fetchOne(); // 단건 조회. 결과 없을시 null 리턴. 결과 여럿인 경우 NonUniqueResultException
+
+        Member fetchFirst = jpaQueryFactory
+                .selectFrom(member)
+                .fetchFirst(); // limit(1).fetchOne() 과 동일한 코드
+
+        QueryResults<Member> fetchResults = jpaQueryFactory
+                .selectFrom(member)
+                .fetchResults(); // getTotal 제공, getResults 를 통해 결과 리스트를 조회할 수 있다.
+        // fetchResults 는 deprecate 되었다.
+        // 이유는 select 기반으로 count 쿼리를 작성하게 되는 여러개의 그룹, having 절 등 복잡한 쿼리에 대해서 문제가 들어남에 의해 deprecate
+        // Blaze-Persistence, BlazeJPAQuery 와 같은 고급 쿼리 기능이 있지만 왠만큼 카운트가 엄격히 필요하지 않다면 그냥 fetch를 사용하라.
+
+        long total = fetchResults.getTotal();
+        List<Member> results = fetchResults.getResults();
+
+        long fetchCount = jpaQueryFactory
+                .selectFrom(member)
+                .fetchCount(); // 아마도 같은 이유로 deprecate 되지 않았을까 싶다. 결국 fetchResults 의 문제는 count 쿼리였으니까...
     }
 }
