@@ -18,9 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import study.querydsl.dto.MemberDto;
-import study.querydsl.dto.MemberTeamDto;
-import study.querydsl.dto.UserDto;
+import study.querydsl.dto.*;
 import study.querydsl.entity.Member;
 import study.querydsl.entity.QMember;
 import study.querydsl.entity.Team;
@@ -543,6 +541,42 @@ public class QueryDslBasicTest {
 
         for (MemberTeamDto memberDto : result) {
             System.out.println("memberDto = " + memberDto);
+        }
+    }
+
+    @Test
+    void findDtoByQueryProjection() {
+        List<MemberDto> fetch = jpaQueryFactory
+                .select(new QMemberDto(member.username, member.age))
+                .from(member)
+                .fetch();
+
+        for (MemberDto memberDto : fetch) {
+            System.out.println("memberDto = " + memberDto);
+        }
+    }
+
+    @Test
+    void findDtoByQueryProjectionWithJoin() {
+        List<MemberTeamDto> fetch = jpaQueryFactory
+                .select(new QMemberTeamDto(member.username, member.team.name))
+                .from(member)
+                .join(member.team, team)
+                .fetch();
+
+        for (MemberTeamDto memberDto : fetch) {
+            System.out.println("memberDto = " + memberDto);
+        }
+    }
+
+    @Test
+    void findWithDistinct() {
+        List<Member> fetch = jpaQueryFactory
+                .selectFrom(member).distinct()
+                .fetch();
+
+        for (Member fetch1 : fetch) {
+            System.out.println("fetch1 = " + fetch1);
         }
     }
 }
