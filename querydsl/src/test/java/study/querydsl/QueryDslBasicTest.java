@@ -2,6 +2,8 @@ package study.querydsl;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
@@ -16,6 +18,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import study.querydsl.dto.MemberDto;
+import study.querydsl.dto.MemberTeamDto;
+import study.querydsl.dto.UserDto;
 import study.querydsl.entity.Member;
 import study.querydsl.entity.QMember;
 import study.querydsl.entity.Team;
@@ -434,6 +439,110 @@ public class QueryDslBasicTest {
             Integer age = tuple.get(member.age);
             System.out.println("username = " + username);
             System.out.println("age = " + age);
+        }
+    }
+
+    @Test
+    void findDtoByJPQL() {
+        List<MemberDto> resultList = em.createQuery("select new study.querydsl.dto.MemberDto(m.username, m.age) from Member m", MemberDto.class)
+                .getResultList();
+
+        for (MemberDto memberDto : resultList) {
+            System.out.println("memberDto = " + memberDto);
+        }
+    }
+
+    @Test
+    void findDtoByQueryDtoSetter() { // Setter 이용
+        List<MemberDto> result = jpaQueryFactory
+                .select(Projections.bean(MemberDto.class, member.username, member.age)) // 기본생성자 필요...
+                .from(member)
+                .fetch();
+
+        for (MemberDto memberDto : result) {
+            System.out.println("memberDto = " + memberDto);
+        }
+    }
+
+    @Test
+    void findDtoByQueryDtoField() { // field 이용
+        List<MemberDto> result = jpaQueryFactory
+                .select(Projections.fields(MemberDto.class, member.username, member.age)) // 기본생성자 필요...
+                .from(member)
+                .fetch();
+
+        for (MemberDto memberDto : result) {
+            System.out.println("memberDto = " + memberDto);
+        }
+    }
+
+    @Test
+    void findDtoByQueryDtoConstructor() { // Constructor 이용
+        List<MemberDto> result = jpaQueryFactory
+                .select(Projections.constructor(MemberDto.class, member.username, member.age)) // 기본생성자 필요...
+                .from(member)
+                .fetch();
+
+        for (MemberDto memberDto : result) {
+            System.out.println("memberDto = " + memberDto);
+        }
+    }
+
+    @Test
+    void findUserDtoByQueryDtoField() {
+        List<UserDto> result = jpaQueryFactory
+                .select(Projections.fields(UserDto.class, member.username.as("name"), member.age))
+                .from(member)
+                .fetch();
+
+        for (UserDto memberDto : result) {
+            System.out.println("memberDto = " + memberDto);
+        }
+    }
+
+    @Test
+    void findUserDtoByQueryDtoConstructor() {
+        List<UserDto> result = jpaQueryFactory
+                .select(Projections.constructor(UserDto.class, member.username, member.age)) // 생성자 이용시 필드이름과 상관 없다. 타입만 맞으면 된다.
+                .from(member)
+                .fetch();
+
+        for (UserDto memberDto : result) {
+            System.out.println("memberDto = " + memberDto);
+        }
+    }
+
+    @Test
+    void findUserDtoByQueryDtoFieldExpressionUtils() {
+        QMember memberSub = new QMember("memberSub");
+        List<UserDto> result = jpaQueryFactory
+                .select(
+                        Projections.fields(UserDto.class,
+                                member.username.as("name"),
+                                ExpressionUtils.as(JPAExpressions
+                                                .select(memberSub.age.max())
+                                                .from(memberSub)
+                                        , "age")
+                        )
+                )
+                .from(member)
+                .fetch();
+
+        for (UserDto memberDto : result) {
+            System.out.println("memberDto = " + memberDto);
+        }
+    }
+
+    @Test
+    void findMemberTeamDtoByQueryDtoField() { // fetchJoin 은 엔티티 연관관계를 한번에 가져오는 Jpa의 개념이지 sql의 개념이 아니라서 Dto를 반환하려는 경우 fetchJoin 사용이 불가하다.
+        List<MemberTeamDto> result = jpaQueryFactory
+                .select(Projections.fields(MemberTeamDto.class, member.username, member.team.name.as("teamName")))
+                .from(member)
+                .join(member.team, team)
+                .fetch();
+
+        for (MemberTeamDto memberDto : result) {
+            System.out.println("memberDto = " + memberDto);
         }
     }
 }
