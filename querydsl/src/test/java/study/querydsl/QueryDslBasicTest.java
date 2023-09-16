@@ -635,4 +635,40 @@ public class QueryDslBasicTest {
     private Predicate allEq(String usernameCond, Integer ageCond) {
         return usernameEq(usernameCond).and(ageEq(ageCond));
     }
+
+    @Test
+    void bulkUpdate() { // 더티체킹에 의한 업데이트는 쿼리가 여러번 날아가기 때문에 일괄적 변경은 bulk 연산이 필요하다.
+        // memberA = 10 -> 비회원
+        // memberB = 20 -> 비회원
+        // memberC = 30 -> 유지
+        // memberD = 40 -> 유지
+
+        long count = jpaQueryFactory
+                .update(member)
+                .set(member.username, "비회원")
+                .where(member.age.lt(28))
+                .execute();
+        // 벌크 업데이트시 db와 영속성 컨텍스트사이의 동기화 문제를 주의해야한다.(db에는 업데이트 되지만 영속성 컨텍스트는 갱신되지 않는다.)
+        em.flush();
+        em.clear(); // 때문에 초기화 시키는 것이 좋다.
+
+        assertThat(count).isEqualTo(2);
+    }
+
+    @Test
+    void bulkAdd() {
+        long count = jpaQueryFactory
+                .update(member)
+                .set(member.age, member.age.add(1))
+//                .set(member.age, member.age.multiply(1)) // 곱하기
+                .execute();
+    }
+
+    @Test
+    void bulkDelete() {
+        long execute = jpaQueryFactory
+                .delete(member)
+                .where(member.age.gt(18))
+                .execute();
+    }
 }
