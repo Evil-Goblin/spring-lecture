@@ -6,12 +6,18 @@ import lombok.Data;
 @Data
 public class MemberTeamDto {
 
+    private Long memberId;
     private String username;
+    private int age;
+    private Long teamId;
     private String teamName;
 
-    @QueryProjection // 안타깝게도 lombok과 적용시점이 다르기 때문에 lombok의 생성자에는 적용할 수 없다. 무조건 수동으로 생성자를 만들어야 한다.
-    public MemberTeamDto(String username, String teamName) {
+    @QueryProjection
+    public MemberTeamDto(Long memberId, String username, int age, Long teamId, String teamName) {
+        this.memberId = memberId;
         this.username = username;
+        this.age = age;
+        this.teamId = teamId;
         this.teamName = teamName;
     }
 }

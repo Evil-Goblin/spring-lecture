@@ -534,13 +534,13 @@ public class QueryDslBasicTest {
 
     @Test
     void findMemberTeamDtoByQueryDtoField() { // fetchJoin 은 엔티티 연관관계를 한번에 가져오는 Jpa의 개념이지 sql의 개념이 아니라서 Dto를 반환하려는 경우 fetchJoin 사용이 불가하다.
-        List<MemberTeamDto> result = jpaQueryFactory
-                .select(Projections.fields(MemberTeamDto.class, member.username, member.team.name.as("teamName")))
+        List<TestMemberTeamDto> result = jpaQueryFactory
+                .select(Projections.fields(TestMemberTeamDto.class, member.username, member.team.name.as("teamName")))
                 .from(member)
                 .join(member.team, team)
                 .fetch();
 
-        for (MemberTeamDto memberDto : result) {
+        for (TestMemberTeamDto memberDto : result) {
             System.out.println("memberDto = " + memberDto);
         }
     }
@@ -559,13 +559,13 @@ public class QueryDslBasicTest {
 
     @Test
     void findDtoByQueryProjectionWithJoin() {
-        List<MemberTeamDto> fetch = jpaQueryFactory
-                .select(new QMemberTeamDto(member.username, member.team.name))
+        List<TestMemberTeamDto> fetch = jpaQueryFactory
+                .select(new QTestMemberTeamDto(member.username, member.team.name))
                 .from(member)
                 .join(member.team, team)
                 .fetch();
 
-        for (MemberTeamDto memberDto : fetch) {
+        for (TestMemberTeamDto memberDto : fetch) {
             System.out.println("memberDto = " + memberDto);
         }
     }
