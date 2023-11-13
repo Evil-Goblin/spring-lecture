@@ -3,7 +3,7 @@ package hello.productorderservice.product;
 import org.springframework.util.Assert;
 
 record GetProductResponse(
-        long id,
+        Long id,
         String name,
         int price,
         DiscountPolicy discountPolicy
