@@ -26,4 +26,15 @@ class ProductService {
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    public GetProductResponse getProduct(Long productId) {
+        final Product product = productPort.getProduct(productId);
+
+        return new GetProductResponse(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getDiscountPolicy()
+        );
+    }
 }
