@@ -7,7 +7,9 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-import static hello.productorderservice.product.ProductSteps.*;
+import static hello.productorderservice.order.OrderSteps.*;
+import static hello.productorderservice.product.ProductSteps.상품등록요청;
+import static hello.productorderservice.product.ProductSteps.상품등록요청_생성;
 
 public class OrderApiTest extends ApiTest {
 
