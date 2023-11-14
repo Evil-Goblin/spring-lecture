@@ -1,6 +1,7 @@
 package hello.productorderservice.order;
 
 import hello.productorderservice.product.Product;
+import jakarta.persistence.Entity;
 import org.springframework.util.Assert;
 
 class Order {
