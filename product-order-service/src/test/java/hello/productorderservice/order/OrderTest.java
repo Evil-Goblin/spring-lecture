@@ -1,7 +1,8 @@
 package hello.productorderservice.order;
 
-import hello.productorderservice.product.DiscountPolicy;
-import hello.productorderservice.product.Product;
+import hello.productorderservice.order.domain.Order;
+import hello.productorderservice.product.domain.DiscountPolicy;
+import hello.productorderservice.product.domain.Product;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 

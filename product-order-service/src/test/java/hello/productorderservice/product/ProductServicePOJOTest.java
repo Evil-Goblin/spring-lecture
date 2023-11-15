@@ -1,5 +1,10 @@
 package hello.productorderservice.product;
 
+import hello.productorderservice.product.application.port.ProductPort;
+import hello.productorderservice.product.application.service.ProductService;
+import hello.productorderservice.product.application.service.UpdateProductRequest;
+import hello.productorderservice.product.domain.DiscountPolicy;
+import hello.productorderservice.product.domain.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

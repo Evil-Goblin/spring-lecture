@@ -1,7 +1,9 @@
-package hello.productorderservice.payment;
+package hello.productorderservice.payment.adapter;
 
-import hello.productorderservice.order.Order;
-import hello.productorderservice.order.OrderRepository;
+import hello.productorderservice.order.domain.Order;
+import hello.productorderservice.order.adapter.OrderRepository;
+import hello.productorderservice.payment.domain.Payment;
+import hello.productorderservice.payment.application.port.PaymentPort;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,4 +1,4 @@
-package hello.productorderservice.payment;
+package hello.productorderservice.payment.application.service;
 
 import org.springframework.util.Assert;
 

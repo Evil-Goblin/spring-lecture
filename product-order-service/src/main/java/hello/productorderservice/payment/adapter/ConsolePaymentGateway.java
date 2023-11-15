@@ -1,4 +1,4 @@
-package hello.productorderservice.payment;
+package hello.productorderservice.payment.adapter;
 
 import org.springframework.stereotype.Component;
 

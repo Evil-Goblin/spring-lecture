@@ -1,5 +1,6 @@
 package hello.productorderservice.order;
 
+import hello.productorderservice.order.application.service.CreateOrderRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

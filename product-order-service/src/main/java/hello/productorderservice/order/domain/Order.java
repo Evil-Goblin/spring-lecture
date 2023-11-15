@@ -1,6 +1,6 @@
-package hello.productorderservice.order;
+package hello.productorderservice.order.domain;
 
-import hello.productorderservice.product.Product;
+import hello.productorderservice.product.domain.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

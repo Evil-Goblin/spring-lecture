@@ -1,5 +1,6 @@
-package hello.productorderservice.order;
+package hello.productorderservice.order.adapter;
 
+import hello.productorderservice.order.domain.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 

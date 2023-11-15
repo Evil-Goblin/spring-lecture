@@ -1,6 +1,8 @@
-package hello.productorderservice.payment;
+package hello.productorderservice.payment.application.service;
 
-import hello.productorderservice.order.Order;
+import hello.productorderservice.order.domain.Order;
+import hello.productorderservice.payment.application.port.PaymentPort;
+import hello.productorderservice.payment.domain.Payment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;

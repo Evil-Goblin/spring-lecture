@@ -1,5 +1,8 @@
 package hello.productorderservice.product;
 
+import hello.productorderservice.product.application.service.AddProductRequest;
+import hello.productorderservice.product.application.service.UpdateProductRequest;
+import hello.productorderservice.product.domain.DiscountPolicy;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

@@ -2,6 +2,7 @@ package hello.productorderservice.payment;
 
 import hello.productorderservice.ApiTest;
 import hello.productorderservice.order.OrderSteps;
+import hello.productorderservice.payment.application.service.PaymentRequest;
 import hello.productorderservice.product.ProductSteps;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

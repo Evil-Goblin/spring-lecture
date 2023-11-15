@@ -1,5 +1,7 @@
-package hello.productorderservice.product;
+package hello.productorderservice.product.adapter;
 
+import hello.productorderservice.product.application.port.ProductPort;
+import hello.productorderservice.product.domain.Product;
 import org.springframework.stereotype.Component;
 
 @Component

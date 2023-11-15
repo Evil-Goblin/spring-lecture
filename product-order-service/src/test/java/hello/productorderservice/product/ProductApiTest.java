@@ -1,6 +1,8 @@
 package hello.productorderservice.product;
 
 import hello.productorderservice.ApiTest;
+import hello.productorderservice.product.adapter.ProductRepository;
+import hello.productorderservice.product.application.service.AddProductRequest;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
