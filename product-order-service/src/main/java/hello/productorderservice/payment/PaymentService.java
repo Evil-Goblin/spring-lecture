@@ -1,7 +1,9 @@
 package hello.productorderservice.payment;
 
 import hello.productorderservice.order.Order;
+import org.springframework.stereotype.Component;
 
+@Component
 class PaymentService {
     private final PaymentPort paymentPort;
 

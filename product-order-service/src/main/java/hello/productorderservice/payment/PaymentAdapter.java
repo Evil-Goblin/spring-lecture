@@ -3,7 +3,9 @@ package hello.productorderservice.payment;
 import hello.productorderservice.order.Order;
 import hello.productorderservice.product.DiscountPolicy;
 import hello.productorderservice.product.Product;
+import org.springframework.stereotype.Component;
 
+@Component
 class PaymentAdapter implements PaymentPort {
 
     private final PaymentGateway paymentGateway;
