@@ -1,0 +1,5 @@
+spring:
+  application.name: splearn
+  jpa:
+    hibernate:
+      ddl-auto: update
